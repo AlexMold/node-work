@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/AlexMold/node-work/issues"
   },
-  "homepage": "https://github.com/AlexMold/node-work#readme"
+  "homepage": "https://github.com/AlexMold/node-work#readme",
+  "dependencies": {
+    "koa": "^1.2.0",
+    "should": "^8.3.0"
+  }
 }
