@@ -4,27 +4,53 @@ const http = require('http');
 const url = require('url');
 const path = require('path');
 const fs = require('fs');
-const mime = require('mime');
+// const mime = require('mime');
 const config = require('config');
+const parse = require('co-busboy');
+const logger = require("koa-logger");
+const extname = path.extname;
+
+
 const koa = require("koa");
 
 let app = koa();
 
+app.use(logger());
+
 app.use(function* (next){
-  console.log(this.request.url);
-  yield* next;
-  //console.log(this.request.req);
-  //yield* getFile();
-  this.body = "Hello world!";
+	// console.log(path.join(__dirname, "public", this.request.url));
+  	yield* next;
+  	console.log("Done!!!");
+  // this.body = "Done!";
 });
 
 
 app.use(function* getFile(next){
-  if(this.request.url === "/") {
-    console.log("lol");
-    //yield* next;
-  }
+	let filename = path.join(__dirname, "public", this.request.url);
+	let indexFile = path.join(__dirname, "public", "index.html")
+	let fstat = yield stat(indexFile);
+	// console.log(this.path ' , ' this.request.url);
+	console.log(filename);
+
+	if (fstat.isFile()) {
+		if(this.request.url != "/") {
+			this.type = extname(filename);
+			this.body = fs.createReadStream(filename);
+		}else{
+			this.type = 'html';
+			this.body = fs.createReadStream(indexFile);
+		}	
+	};
+	yield* next;
 });
+
+
+
+function stat(file){
+	return function(cb){
+		fs.stat(file, cb);
+	}
+}
 
 app.listen(3000);
 
@@ -63,8 +89,8 @@ app.listen(3000);
 
 //module.exports = http.createServer((req, res) => {
 //
-//  let pathname = decodeURI(url.parse(req.url).pathname);
-//  let filename = pathname.slice(1); // /file.ext -> file.ext
+//  let filename = decodeURI(url.parse(req.url).filename);
+//  let filename = filename.slice(1); // /file.ext -> file.ext
 //
 //  if (filename.includes('/') || filename.includes('..')) {
 //    res.statusCode = 400;
@@ -73,7 +99,7 @@ app.listen(3000);
 //  }
 //
 //  if (req.method == 'GET') {
-//    if (pathname == '/') {
+//    if (filename == '/') {
 //      sendFile(config.get('publicRoot') + '/index.html', res);
 //    } else {
 //      let filepath = path.join(config.get('filesRoot'), filename);
