@@ -1,90 +1,103 @@
 'use strict';
 
-const http = require('http');
-const url = require('url');
-const path = require('path');
-const fs = require('fs');
+//const config = require('config');
+//const fs = require('fs');
 // const mime = require('mime');
-const config = require('config');
+//const http = require('http');
+
+const fs = require("mz/fs");
+const url = require('url');
 const parse = require('co-busboy');
+const path = require('path');
 const logger = require("koa-logger");
 const extname = path.extname;
-
-
 const koa = require("koa");
 
-let app = koa();
+const app = koa();
+
+
 
 app.use(logger());
 
 app.use(function* (next){
-	// console.log(path.join(__dirname, "public", this.request.url));
-  	yield* next;
-  	console.log("Done!!!");
-  // this.body = "Done!";
+  yield* next;
+  console.log("Done!!!");
 });
 
 
-app.use(function* getFile(next){
-	let filename = path.join(__dirname, "public", this.request.url);
-	let indexFile = path.join(__dirname, "public", "index.html")
-	let fstat = yield stat(indexFile);
-	// console.log(this.path ' , ' this.request.url);
-	console.log(filename);
-
-	if (fstat.isFile()) {
-		if(this.request.url != "/") {
-			this.type = extname(filename);
-			this.body = fs.createReadStream(filename);
-		}else{
-			this.type = 'html';
-			this.body = fs.createReadStream(indexFile);
-		}	
-	};
-	yield* next;
-});
+app.use(getFile);
+app.use(postFile);
+app.use(deleteFile);
 
 
 
-function stat(file){
-	return function(cb){
-		fs.stat(file, cb);
-	}
+
+
+
+function* getFile(next){
+  let filename = path.join(__dirname, "files", this.request.url);
+  let indexFile = path.join(__dirname, "public", "index.html");
+  let fstat = yield fs.stat(indexFile);
+
+  if (fstat.isFile() && this.method === "GET") {
+    if (this.request.url != "/") {
+      this.type = extname(filename);
+      this.body = fs.createReadStream(filename);
+    } else {
+      this.type = 'html';
+      this.body = fs.createReadStream(indexFile);
+    }
+  };
+  yield* next;
 }
+
+
+function* deleteFile(next){
+  let filename = path.join(__dirname, "files", this.request.url);
+
+  if (this.method === "DELETE") {
+    let deleted = yield fs.unlink(filename);
+    if(deleted){
+      yield* next;
+    }
+    console.log(deleted);
+  }
+}
+
+
+function* postFile(next){
+
+  if ('POST' != this.method) return yield next;
+  console.log(parse(this));
+  //let filename = path.join(__dirname, "files");
+  let parts = parse(this, {
+    autoFields: true
+  });
+  let part;
+
+  while (part = yield parts) {
+    if(part.length){
+      console.log('key: ' + part[0]);
+      console.log('value: ' + part[1]);
+    }else {
+      let stream = fs.createWriteStream(__filename, {flags: 'wx'});
+      part.pipe(stream)
+        .on('error', this.onerror.bind(this));
+      console.log('uploading %s -> %s', part.filename, stream.path);
+    }
+  }
+
+  this.redirect('/');
+}
+
 
 app.listen(3000);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//function stat(file){
+//	return function(cb){
+//		fs.stat(file, cb);
+//	}
+//}
 
 
 //module.exports = http.createServer((req, res) => {
