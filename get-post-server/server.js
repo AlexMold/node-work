@@ -20,8 +20,11 @@ const app = koa();
 app.use(logger());
 
 app.use(function* (next){
-  yield* next;
-  console.log("Done!!!");
+  try{
+    yield* next;
+  }catch(e){
+    console.log("Done!!!");
+  }
 });
 
 
@@ -68,12 +71,14 @@ function* deleteFile(next){
 function* postFile(next){
 
   if ('POST' != this.method) return yield next;
-  console.log(parse(this));
   //let filename = path.join(__dirname, "files");
   let parts = parse(this, {
     autoFields: true
   });
   let part;
+  if(this.method === "POST"){
+    console.log(__dirname);
+  }
 
   while (part = yield parts) {
     if(part.length){
