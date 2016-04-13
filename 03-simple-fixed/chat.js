@@ -32,6 +32,7 @@ app.use(function*(next) {
 });
 
 let router = new Router();
+let prom;
 
 router
   .get('/', function* (next) {
@@ -42,31 +43,31 @@ router
   })
   .get('/subscribe', function* (next) {
     clients.push(this);
-    yield prom;
-    //if(clients[0]['response']['message'] === 'Not found' || clients[0]['response']['message'] === 'OK'){
-    //  yield* next;
-    //}else{
-    //  this.body = clients[0]['response']['message'];
-    //}
-    this.body = prom;
-    //yield* next;
+    //console.log(clients[0]['res'].end());
+    //console.log(clients[0]['res']);
+    this.body = yield new Promise(function(resolve, reject) {
+      if(clients[0]['res']['finished']){
+        resolve(clients[0]['response']['message']);
+      }else{
+        reject('bad');
+      }
+    })
+
+    console.log(this.body);
   });
-let prom;
 
   router.post('/publish', function* (next) {
     let ct = '';
-    prom = new Promise(function (resolve, reject) {
       this.req
         .on('data', function(data){
           ct += data;
         })
         .on('end', function(){
-          console.log(clients);
-          //clients[0]['response']['message'] = ct;
-          resolve(ct);
+          //console.log(clients);
+          clients[0]['response']['message'] = ct;
+          clients[0]['res'].end();
+          this.body = ct;
         })
-      reject('test!');
-    })
     //this.body = 'lol';
   });
 
