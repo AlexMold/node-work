@@ -1,5 +1,7 @@
 'use strict';
 
+// need to finish '/publish' and '/subscribe'
+
 const http = require('http');
 const fs = require('mz/fs');
 const url = require('url');
@@ -43,11 +45,10 @@ router
   })
   .get('/subscribe', function* (next) {
     clients.push(this);
-    //console.log(clients[0]['res'].end());
-    //console.log(clients[0]['res']);
+
     this.body = yield new Promise(function(resolve, reject) {
       if(clients[0]['res']['finished']){
-        resolve(clients[0]['response']['message']);
+        resolve();
       }else{
         reject('bad');
       }
@@ -63,9 +64,9 @@ router
           ct += data;
         })
         .on('end', function(){
-          //console.log(clients);
           clients[0]['response']['message'] = ct;
           clients[0]['res'].end();
+          console.log(clients);
           this.body = ct;
         })
     //this.body = 'lol';
