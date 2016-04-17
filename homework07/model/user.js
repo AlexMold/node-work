@@ -14,6 +14,11 @@ mongoose.connect('mongodb://localhost/test', {
 
 // this schema can be reused in another schema
 const userSchema = new mongoose.Schema({
+  name:   {
+    type:     String,
+    required: true,
+    unique:   true
+  },
   email:   {
     type:     String,
     required: true,
@@ -26,6 +31,6 @@ const userSchema = new mongoose.Schema({
 });
 
 
-let User = mongoose.model('User', userSchema);
+let user = mongoose.model('User', userSchema);
 
-module.exports = User;
+module.exports = user;
