@@ -1,18 +1,18 @@
 'use strict';
 
 // Dependencies
-const http        = require('http')
-  	, koa         = require('koa')
-  	, views       = require('koa-views')
-  	, logger      = require('koa-logger')
-  	, serve       = require('koa-static')
-  	, bodyParser  = require('koa-bodyparser');
+const http        = require('http'),
+  		koa         = require('koa'),
+  		views       = require('koa-views'),
+  		logger      = require('koa-logger'),
+  		serve       = require('koa-static'),
+  		bodyParser  = require('koa-bodyparser');
 
 // Custom Koa middleware
 const router = require('./routes/router');
 
 // Create koa app
-const app = koa();
+const app = module.exports = koa();
 
 
 app.use(function*(next){
@@ -39,12 +39,3 @@ app.use(views('views', {map:{html:'swig'}}));
 
 // Define routes
 router(app);
-
-// Define configurable port
-let port = process.env.PORT || 3000;
-
-// Listen for connections
-app.listen(port);
-
-// Log port
-console.log('Server listening on port ' + port);
