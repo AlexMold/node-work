@@ -1,5 +1,7 @@
+'use strict';
+
 // Require todo model
-var User = require('../model/user');
+const User = require('../model/user');
 
 module.exports = function *(id) {
   // Remove a todo by ID

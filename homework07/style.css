@@ -1,3 +1,74 @@
 body{
-	color: red;
+	color: #343434;
+	margin: 0;
+	padding: 0;
+}
+.content{
+	display: flex;
+	height: 70vh;
+	flex-direction: column;
+	justify-content: center;
+	margin: 0 100px;
+}
+h1{
+	font-size: 24px;
+	color: #343434;
+}
+p{
+	font-size: 18px;
+	color: #343434;
+}
+.users-list{
+	list-style: none;
+	line-height: 30px;
+	font-size: 16px;
+	margin: 10px;
+	padding: 0;
+}
+.users-list li{
+	padding-bottom: 15px;
+}
+.users-list strong{
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	width: 100px;
+	display: block;
+	overflow: hidden;
+	float: left;
+	text-transform: capitalize;
+	color: #888888;
+	padding: 0 5px;
+}
+.users-list a{
+	display: inline-block;
+	text-decoration: none;
+	background: #0b97c4;
+	color: white;
+	line-height: 30px;
+	padding: 0 10px;
+	margin: 0 10px;
+	border-radius: 5px;
+	transition: .5s;
+}
+.users-list a:hover{
+	background: #2f6fad;
+}
+input[type="email"],
+input[type="text"]{
+	width: 250px;
+	height: 30px;
+	border-radius: 3px;
+	border: 1px solid #888888;
+	padding: 0 5px;
+	line-height: 30px;
+}
+input[type="submit"]{
+	width: 100px;
+	height: 30px;
+	border-radius: 5px;
+	border: 0;
+	background: gray;
+	color: #eeeeee;
+	font-size: 16px;
+	cursor: pointer;
 }

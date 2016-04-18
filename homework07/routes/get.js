@@ -1,7 +1,9 @@
-var user = require('../model/user');
+'use strict';
 
-module.exports = function *() {
+const User = require('../model/user');
+
+module.exports = function* () {
   // Render template
-  console.log(Object.keys(user.collection));
-  yield this.render('index', user);
+  let rst = yield User.find({});
+  yield this.render('index', {users: rst});
 };

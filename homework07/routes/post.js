@@ -1,5 +1,7 @@
-// Require todo model
-var User = require('../model/user');
+'use strict';
+
+// Require User model
+const User = require('../model/user');
 
 module.exports = function *() {
   // Parse input from request body
@@ -8,7 +10,7 @@ module.exports = function *() {
   // Get current date
   var creationDate = new Date();
   
-  // Create new todo Mongoose model
+  // Create new User Mongoose model
   var user = new User();
   
   // Set properties

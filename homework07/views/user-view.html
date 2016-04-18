@@ -1,11 +1,10 @@
 {% extends 'layout.html' %}
 
-{% block title %}{{ user.name }}{% endblock %}
+{% block title %} User {{ user.name }}{% endblock %}
 
 {% block content %}
   <h1>{{ user.name }}</h1>
   <p>{{ user.email }}</p>
-  <p><em>Created On: </i> {{ user.created }}</p>
-  <!-- <p><i>Last Updated On: </i> {{ todo.updated_on.toDateString() }}</p> -->
+  <p><em>Created On: </i> {{ user.created.toISOString() }}</p>
   <p><a href="/">Back to List</a></p>
 {% endblock %}
