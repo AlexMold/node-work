@@ -6,7 +6,7 @@ if (process.env.TRACE) {
 }
 
 var koa = require('koa');
-var app = koa();
+var app = module.exports = koa();
 
 var config = require('config');
 let mongoose = require('./libs/mongoose');
@@ -69,5 +69,3 @@ router
 
 
 app.use(router.routes());
-
-app.listen(3000);
