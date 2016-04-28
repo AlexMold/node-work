@@ -13,7 +13,6 @@ describe('Server http requests => ', function() {
     server.listen(8080);
   });
 
-
   describe('GET requests', function() {
 
     it('get to / must be index.html', function(done) {
@@ -24,7 +23,6 @@ describe('Server http requests => ', function() {
         }
         response.statusCode.should.equal(200);
         response.headers['content-type'].should.equal('text/html; charset=utf-8');
-
         done();
       })
     });
@@ -36,12 +34,9 @@ describe('Server http requests => ', function() {
           return;
         }
         response.statusCode.should.equal(404);
-
         done();
       })
     });
-
   });
-
 
 });
